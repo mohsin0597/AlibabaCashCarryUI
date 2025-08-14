@@ -27,7 +27,9 @@ const UpdateClientForm = ({ client, open, onClose, onSave }) => {
       <DialogContent>
         <Box display="flex" flexDirection="column" gap={2} mt={1}>
           <TextField label="Name" value={formData.name} onChange={handleChange('name')} fullWidth />
-          <TextField label="Code" value={formData.clientCode} onChange={handleChange('clientCode')} fullWidth />
+          <TextField label="Code" value={formData.clientCode} onChange={handleChange('clientCode')} fullWidth InputProps={{
+            readOnly: true,
+          }} />
           <TextField label="City" value={formData.city} onChange={handleChange('city')} fullWidth />
           <TextField label="Email" value={formData.email} onChange={handleChange('email')} fullWidth />
           <TextField label="Phone" value={formData.phone} onChange={handleChange('phone')} fullWidth />

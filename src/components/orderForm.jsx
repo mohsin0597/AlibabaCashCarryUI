@@ -9,32 +9,33 @@ import {
   Stack,
   MenuItem,
 } from '@mui/material';
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { format } from "date-fns";
 import { useDispatch } from 'react-redux';
 import { addOrder } from '../redux/orderSlice';
 
 const OrderForm = ({ open, handleClose, client, readonly }) => {
   const dispatch = useDispatch();
-  const [formData, setFormData] = useState({
-    clientName: '',
+  const initialFormState = {
     clientCode: '',
     orderNo: '',
-    orderDate:'',
+    orderDate: format(new Date(), "yyyy-MM-dd"),
     direction: '',
-    receivedAt: '',
-    exitAt: '',
-    status: '',
-    paymentMode: '',
     deliveredBy: '',
     remarks: '',
-  });
+  };
+  const [formData, setFormData] = useState(initialFormState);
 
   // ✅ Prefill when client or open changes
   useEffect(() => {
     if (client && open) {
       setFormData((prev) => ({
         ...prev,
-        clientName: client.name || '',
+        // clientName: client.name || '',
         clientCode: client.clientCode || '',
+        direction: client.location || '',
       }));
     }
   }, [client, open]);
@@ -44,15 +45,9 @@ const OrderForm = ({ open, handleClose, client, readonly }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // const handleSubmit = () => {
-  //   console.log('Order Data:', formData);
-  //   handleClose();
-  //   // Send formData to state or backend here
-  // };
   const handleSubmit = async () => {
   try {
     const token = localStorage.getItem('authToken');
-    
     const res = await fetch(
       'https://adminpanelnodeapi.onrender.com/api/v1/orders', 
       {
@@ -64,16 +59,14 @@ const OrderForm = ({ open, handleClose, client, readonly }) => {
         body: JSON.stringify(formData),
       }
     );
-
     if (!res.ok) {
       throw new Error(`Error ${res.status}`);
     }
-
     const data = await res.json();
     console.log('Order saved:', data);
     dispatch(addOrder(data));
+    setFormData(initialFormState); // Reset form after successful submit
     handleClose();
-    
   } catch (error) {
     console.error('Error saving order:', error);
   }
@@ -85,31 +78,33 @@ const OrderForm = ({ open, handleClose, client, readonly }) => {
       <DialogContent>
         <Stack spacing={2} mt={1}>
           <TextField
-            label="Client Name"
-            name="clientName"
-            value={formData.clientName}
-            onChange={handleChange}
-            fullWidth
-          />
-          <TextField
             label="Client Code"
             name="clientCode"
             value={formData.clientCode}
             onChange={handleChange}
             fullWidth
+            InputProps={{
+              readOnly: true,
+            }}
           />
           <TextField
-            label="Order No"
+            label="Factura"
             name="orderNo"
             value={formData.orderNo}
             onChange={handleChange}
             fullWidth
           />
           <TextField
-            label="Order Date"
-            name="orderDate"
-            type="date"
-            value={formData.orderDate}
+            label="Total"
+            name="totalAmount"
+            value={formData.totalAmount}
+            onChange={handleChange}
+            fullWidth
+          />
+          <TextField
+            label="Paid"
+            name="paidAmount"
+            value={formData.paidAmount}
             onChange={handleChange}
             fullWidth
           />
@@ -120,62 +115,29 @@ const OrderForm = ({ open, handleClose, client, readonly }) => {
             onChange={handleChange}
             fullWidth
           />
-          <TextField
-            label="Received At"
-            name="receivedAt"
-            type="time"
-            InputLabelProps={{ shrink: true }}
-            value={formData.receivedAt}
-            onChange={handleChange}
-            fullWidth
-          />
-          <TextField
-            label="Exit At"
-            name="exitAt"
-            type="time"
-            InputLabelProps={{ shrink: true }}
-            value={formData.exitAt}
-            onChange={handleChange}
-            fullWidth
-          />
-          <TextField
-            label="Status"
-            name="status"
-            select
-            value={formData.status}
-            onChange={handleChange}
-            fullWidth
-          >
-            <MenuItem value="Pending">Pending</MenuItem>
-            <MenuItem value="Completed">Completed</MenuItem>
-            <MenuItem value="Cancelled">Cancelled</MenuItem>
-          </TextField>
-          <TextField
-            label="Payment Mode"
-            name="paymentMode"
-            select
-            value={formData.paymentMode}
-            onChange={handleChange}
-            fullWidth
-          >
-            <MenuItem value="Cash">Cash</MenuItem>
-            <MenuItem value="Card">Card</MenuItem>
-            <MenuItem value="Online">Online</MenuItem>
-          </TextField>
-          <TextField
-            label="Delivered By"
-            name="deliveredBy"
-            value={formData.deliveredBy}
-            onChange={handleChange}
-            fullWidth
-          />
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DatePicker
+              label="Date"
+              value={formData.orderDate ? new Date(formData.orderDate) : new Date()}
+              onChange={(newValue) => {
+                setFormData((prev) => ({
+                  ...prev,
+                  orderDate: format(newValue, "yyyy-MM-dd"), // store in backend-friendly format
+                }));
+              }}
+              format="dd-MM-yyyy"
+              slotProps={{
+                textField: {
+                  fullWidth: true,
+                },
+              }}
+            />
+          </LocalizationProvider>
           <TextField
             label="Remarks"
             name="remarks"
             value={formData.remarks}
             onChange={handleChange}
-            multiline
-            rows={3}
             fullWidth
           />
         </Stack>

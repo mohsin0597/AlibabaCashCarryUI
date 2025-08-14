@@ -164,6 +164,9 @@ import {
 import { fieldLabels } from '../utils';
 import { useSelector, useDispatch } from 'react-redux';
 import { setOrders, updateOrderField } from '../redux/orderSlice';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 // import { updateOrderField } from '../store/ordersSlice';
 
 const OrderTable = ({ sortConfig, onSort = () => {} }) => {
@@ -179,6 +182,8 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalData, setModalData] = useState({});
   const [trailModalOpen, setTrailModalOpen] = useState(false);
+  const [modificatioModalOpen, setModificationModalOpen] = useState(false);
+  const [modificationModalData, setModificationModalData] = useState({});
   const [trailData, setTrailData] = useState({});
 
   useEffect(() => {
@@ -217,8 +222,9 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
 
 
   const handleUpdateAction = (order, action) => {
-    if (action === 'Trial') {
-      setEditRowId(order.id); // enable inline edit
+     if (action === 'Modification') {
+      setModificationModalData({ ...order }); // copy row data into modal
+      setModificationModalOpen(true); // open modal
     } else if (action === 'Update') {
       setModalData({ ...order }); // copy row data into modal
       setModalOpen(true); // open modal
@@ -237,12 +243,11 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
     setModalData(prev => ({ ...prev, [field]: value }));
   };
 
-  // const handleModalSave = () => {
-  //   Object.keys(modalData).forEach(key => {
-  //     dispatch(updateOrderField({ id: modalData.id, field: key, value: modalData[key] }));
-  //   });
-  //   setModalOpen(false);
-  // };
+  const handleModificationModalChange = (field, value) => {
+    setModificationModalData(prev => ({ ...prev, [field]: value }));
+  };
+
+  
   const handleModalSave = async () => {
   try {
     const { clientCode, orderNo,receivedAt, ...payload } = modalData;
@@ -280,6 +285,42 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
   }
 };
 
+ const handleModificationModalSave = async () => { 
+  try {
+    const { clientCode, receivedAt, ...payload } = modificationModalData;
+    const token = localStorage.getItem('authToken');
+    const res = await fetch(
+      `https://adminpanelnodeapi.onrender.com/api/v1/orders/${modificationModalData.id}`, 
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token ? `Bearer ${token}` : '',
+        },
+        body: JSON.stringify(payload), // send entire updated order object
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error(`Error ${res.status}`);
+    }
+
+    const updatedOrder = await res.json();
+    dispatch(setOrders(updatedOrder.items || []));
+
+    Object.keys(updatedOrder).forEach(key => {
+      dispatch(updateOrderField({ id: updatedOrder.id, field: key, value: updatedOrder[key] }));
+    });
+
+    setModificationModalOpen(false);
+
+    console.log('Order Modfied successfully:', updatedOrder);
+    
+  } catch (error) {
+    console.error('Error updating order:', error);
+  }
+ }
+
   const getRowStyle = (status) => {
     switch (status) {
       case 'Pending':
@@ -297,23 +338,17 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
     <>
       <Table>
         <TableHead>
-          <TableRow>
-            {['orderDate', 'orderNo', 'clientName', 'direction', 'totalAmount', 'paidAmount', 'dueAmount', 'paymentMode', 'status'].map((col) => (
-              <TableCell key={col}>
-                <TableSortLabel
-                  active={sortConfig?.key === col}
-                  direction={sortConfig?.key === col ? sortConfig.direction : 'asc'}
-                  onClick={() => onSort(col)}
-                >
-                  {col.charAt(0).toUpperCase() + col.slice(1)}
-                </TableSortLabel>
-              </TableCell>
-            ))}
-            <TableCell>Received At</TableCell>
-            <TableCell>Exit At</TableCell>
-            <TableCell>Delivered By</TableCell>
-            <TableCell>Remarks</TableCell>
-            <TableCell>Update</TableCell>
+          <TableRow sx={{ backgroundColor: '#000000' }}>
+            <TableCell sx={{ color: '#f5f5f5f5' }}>Order Date</TableCell>
+            <TableCell sx={{ color: '#f5f5f5f5' }}>Factura No</TableCell>
+            <TableCell sx={{ color: '#f5f5f5f5' }}>Total</TableCell>
+            <TableCell sx={{ color: '#f5f5f5f5' }}>Paid</TableCell>
+            <TableCell sx={{ color: '#f5f5f5f5' }}>Due</TableCell>
+            <TableCell sx={{ color: '#f5f5f5f5' }}>Payment</TableCell>
+            <TableCell sx={{ color: '#f5f5f5f5' }}>Actions</TableCell>
+            <TableCell sx={{ color: '#f5f5f5f5' }}>Driver</TableCell>
+            <TableCell sx={{ color: '#f5f5f5f5' }}>Remarks</TableCell>
+            <TableCell sx={{ color: '#f5f5f5f5' }}>Caja</TableCell>
           </TableRow>
         </TableHead>
 
@@ -323,10 +358,14 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
             const isEditing = editRowId === order.id;
             return (
               <TableRow key={order.id} style={getRowStyle(order.status)}>
-                <TableCell>{order.orderDate}</TableCell>
+                <TableCell>
+                  {order.orderDate
+                    ? new Date(order.orderDate).toLocaleDateString("en-GB").replace(/\//g, "-")
+                    : ""}
+                </TableCell>
                 <TableCell>{order.orderNo}</TableCell>
-                <TableCell>{order.clientName}</TableCell>
-                <TableCell>{order.direction}</TableCell>
+                {/* <TableCell>{order.clientName}</TableCell>
+                <TableCell>{order.direction}</TableCell> */}
                 <TableCell>
                   {isEditing ? (
                     <TextField
@@ -364,11 +403,6 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
                   )}
                 </TableCell>
                 <TableCell>{order.paymentMode}</TableCell>
-                <TableCell>{order.status}</TableCell>
-                <TableCell>{order.receivedAt}</TableCell>
-                <TableCell>{order.exitAt}</TableCell>
-                <TableCell>{order.deliveredBy}</TableCell>
-                <TableCell>{order.remarks}</TableCell>
                 <TableCell>
                   <Select
                     value=""
@@ -376,12 +410,28 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
                     size="small"
                     displayEmpty
                   >
-                    <MenuItem value="">Select</MenuItem>
-                    {/* <MenuItem value="Trial">Trial</MenuItem> */}
+                    <MenuItem value="">Actions</MenuItem>
+                    <MenuItem value="Modification">Modification</MenuItem>
                     <MenuItem value="OrderTrail">Order Trail</MenuItem>
                     <MenuItem value="Update">Update</MenuItem>
                   </Select>
                 </TableCell>
+                {/* <TableCell>{order.status}</TableCell>
+                <TableCell>{order.receivedAt}</TableCell>
+                <TableCell>{order.exitAt}</TableCell> */}
+                <TableCell>{order.deliveredBy}</TableCell>
+                <TableCell>{order.remarks}</TableCell>
+                <TableCell>{order.boxes}</TableCell>
+                  {/* {isEditing ? (
+                    <TextField
+                      value={order.caja}
+                      onChange={(e) => handleEdit(order.id, 'caja', e.target.value)}
+                      variant="standard"
+                      fullWidth
+                    />
+                  ) : (
+                    order.caja
+                  )} */}
               </TableRow>
             );
           })}
@@ -392,44 +442,82 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
       <Dialog open={modalOpen} onClose={() => setModalOpen(false)} fullWidth>
         <DialogTitle>Update Order Payment</DialogTitle>
         <DialogContent dividers>
-          {Object.keys(modalData)
-            .filter(
-              (field) =>
-                !['id', 'receivedAt', 'exitAt', 'status', 'deliveredBy'].includes(field)
-            )
-            .map((field) => {
-              const label = fieldLabels[field] || field;
-              const isReadOnly = ['clientName', 'clientCode', 'orderNo', 'orderDate'].includes(field);
-
-              if (field === 'paymentMode') {
-                return (
-                  <FormControl fullWidth margin="normal" size="small" key={field}>
-                    <InputLabel>{label}</InputLabel>
-                    <Select
-                      value={modalData[field] || ''}
-                      onChange={(e) => handleModalChange(field, e.target.value)}
-                      label={label}
-                    >
-                      <MenuItem value="Cash">Cash</MenuItem>
-                      <MenuItem value="Card">Card</MenuItem>
-                      <MenuItem value="Online">Online</MenuItem>
-                    </Select>
-                  </FormControl>
-                );
+          {[
+            "clientCode",
+            "orderNo",
+            "totalAmount",
+            "paymentDate",
+            "dueAmount",
+            "direction",
+            "paidAmount",
+            "cashPaid",
+            "cardPaid",
+            "remarks",
+            "paymentMode"
+          ].map((field) => {
+            const label = fieldLabels[field] || field;
+            const isReadOnly = ["clientCode", "orderNo","totalAmount","direction","paidAmount","remarks","dueAmount"].includes(field);
+            if (field === "paymentDate") {
+              let dateValue = null;
+              if (modalData[field]) {
+                const val = modalData[field];
+                if (typeof val === 'string' && val.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                  dateValue = new Date(val);
+                } else if (typeof val === 'string' && val.match(/^\d{2}-\d{2}-\d{4}$/)) {
+                  const [day, month, year] = val.split('-');
+                  dateValue = new Date(`${year}-${month}-${day}`);
+                }
               }
-
               return (
-                <TextField
-                  key={field}
-                  label={label}
-                  value={modalData[field] || ''}
-                  onChange={(e) => handleModalChange(field, e.target.value)}
-                  fullWidth
-                  margin="normal"
-                  InputProps={{ readOnly: isReadOnly }}
-                />
+                <LocalizationProvider dateAdapter={AdapterDateFns} key={field}>
+                  <DatePicker
+                    label={label}
+                    value={dateValue}
+                    onChange={(newValue) => {
+                      if (newValue) {
+                        const year = newValue.getFullYear();
+                        const month = String(newValue.getMonth() + 1).padStart(2, '0');
+                        const day = String(newValue.getDate()).padStart(2, '0');
+                        handleModalChange(field, `${year}-${month}-${day}`);
+                      } else {
+                        handleModalChange(field, '');
+                      }
+                    }}
+                    format="dd-MM-yyyy"
+                    slotProps={{ textField: { fullWidth: true } }}
+                    renderInput={(params) => <TextField {...params} fullWidth />}
+                  />
+                </LocalizationProvider>
               );
-            })}
+            }
+            if (field === "paymentMode") {
+              return (
+                <FormControl fullWidth margin="normal" size="small" key={field}>
+                  <InputLabel>{label}</InputLabel>
+                  <Select
+                    value={modalData[field] || ''}
+                    onChange={(e) => handleModalChange(field, e.target.value)}
+                    label={label}
+                  >
+                    <MenuItem value="Cash">Cash</MenuItem>
+                    <MenuItem value="Card">Card</MenuItem>
+                    <MenuItem value="Online">Online</MenuItem>
+                  </Select>
+                </FormControl>
+              );
+            }
+            return (
+              <TextField
+                key={field}
+                label={label}
+                value={modalData[field] || ''}
+                onChange={(e) => handleModalChange(field, e.target.value)}
+                fullWidth
+                margin="normal"
+                InputProps={{ readOnly: isReadOnly }}
+              />
+            );
+          })}
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setModalOpen(false)} color="secondary">
@@ -459,13 +547,80 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
                 <TableCell>{trailData.cardPaid || '-'}</TableCell>
                 <TableCell>{trailData.paymentMode || '-'}</TableCell>
                 <TableCell>{trailData.remaining || '-'}</TableCell>
-                <TableCell>{trailData.paidDate || '-'}</TableCell>
+                <TableCell>{trailData.paymentDate || '-'}</TableCell>
               </TableRow>
             </TableBody>
           </Table>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setTrailModalOpen(false)} color="secondary">Close</Button>
+        </DialogActions>
+      </Dialog>
+      {/* Modal for Modification */}
+      <Dialog open={modificatioModalOpen} onClose={() => setModificationModalOpen(false)} fullWidth>
+        <DialogTitle>Order Modification</DialogTitle>
+        <DialogContent dividers>
+          {["clientCode", "orderNo", "totalAmount", "paidAmount", "direction", "orderDate", "remarks"].map((field) => {
+            const label = fieldLabels[field] || field;
+            const isReadOnly = field === "clientCode";
+            if (field === "orderDate") {
+              // Use same logic as orderForm: store as yyyy-MM-dd, display as dd-MM-yyyy
+              let dateValue = null;
+              if (modificationModalData[field]) {
+                // If value is dd-MM-yyyy, convert to yyyy-MM-dd for Date object
+                const val = modificationModalData[field];
+                if (typeof val === 'string' && val.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                  // yyyy-MM-dd
+                  dateValue = new Date(val);
+                } else if (typeof val === 'string' && val.match(/^\d{2}-\d{2}-\d{4}$/)) {
+                  // dd-MM-yyyy
+                  const [day, month, year] = val.split('-');
+                  dateValue = new Date(`${year}-${month}-${day}`);
+                }
+              }
+              return (
+                <LocalizationProvider dateAdapter={AdapterDateFns} key={field}>
+                  <DatePicker
+                    label={label}
+                    value={dateValue}
+                    onChange={(newValue) => {
+                      // Store as yyyy-MM-dd
+                      if (newValue) {
+                        const year = newValue.getFullYear();
+                        const month = String(newValue.getMonth() + 1).padStart(2, '0');
+                        const day = String(newValue.getDate()).padStart(2, '0');
+                        handleModificationModalChange(field, `${year}-${month}-${day}`);
+                      } else {
+                        handleModificationModalChange(field, '');
+                      }
+                    }}
+                    format="dd-MM-yyyy"
+                    slotProps={{ textField: { fullWidth: true } }}
+                    renderInput={(params) => <TextField {...params} fullWidth />}
+                  />
+                </LocalizationProvider>
+              );
+            }
+            return (
+              <TextField
+                key={field}
+                label={label}
+                value={modificationModalData[field] || ''}
+                onChange={(e) => handleModificationModalChange(field, e.target.value)}
+                fullWidth
+                margin="normal"
+                InputProps={{ readOnly: isReadOnly }}
+              />
+            );
+          })}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setModificationModalOpen(false)} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={handleModificationModalSave} color="primary" variant="contained">
+            Save
+          </Button>
         </DialogActions>
       </Dialog>
     </>

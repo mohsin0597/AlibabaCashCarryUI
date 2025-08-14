@@ -138,6 +138,9 @@ import OrderForm from './orderForm';
 import { updateClient } from '../redux/clientSlice';
 import { setSelectedClient } from '../redux/selectedClientSlice';
 import { setOrders, updateOrderField } from '../redux/orderSlice';
+import AddIcon from '@mui/icons-material/Add';
+import PersonIcon from '@mui/icons-material/Person';
+
 
 
 const ClientDetailsPage = () => {
@@ -260,24 +263,36 @@ const ClientDetailsPage = () => {
       <Card sx={{ mt: 2, mb: 3 }}>
         <CardContent>
           <Box>
-            <Typography variant="h5">
-              {client.name} ({client.clientCode})
+            <Typography align="center" variant="h5" sx={{ my: "5px" }}>
+              {client.name}
+            </Typography> 
+            <Box display="flex" justifyContent="space-evenly" sx={{ pt: "10px" }}>
+            <Typography sx={{ backgroundColor: "#f3eeee", borderRadius: "8px", width: "fit-content", padding: "4px" }}>{client.clientCode}</Typography>
+            <Typography sx={{ backgroundColor: "#f3eeee", borderRadius: "8px", width: "fit-content", padding: "4px" }}>{client.phone}</Typography>
+            <Typography sx={{ backgroundColor: "#f3eeee", borderRadius: "8px", width: "fit-content", padding: "4px" }}>{client.location}</Typography>
+            <Typography sx={{ backgroundColor: "#f3eeee", borderRadius: "8px", width: "fit-content", padding: "4px" }}>0 km</Typography>
+            </Box>
+          </Box>
+
+          <Box sx={{ pt:"10px"}}>
+            <Typography align="center" variant="h6" sx={{ my: "2px" }}>
+              Total Pending Balance
             </Typography>
-            <Typography>City: {client.city}</Typography>
-            <Typography>Email: {client.email}</Typography>
-            <Typography>Phone: {client.phone}</Typography>
+            <Typography align="center" sx={{ color: "orange", fontWeight: "bold" }}>{client.totalPendingBalance} €</Typography>
           </Box>
 
           <Box display="flex" gap={2} justifyContent="space-evenly" mt={3}>
-            <Button variant="contained" color="primary" onClick={() => setIsEditOpen(true)}>
-              Update Client
-            </Button>
             <Button
               variant="contained"
               color="secondary"
+              sx={{backgroundColor: 'green'}}
+              startIcon={<AddIcon />}
               onClick={() => setOrderFormOpen(true)}
             >
-              Add New Order
+              Add Order
+            </Button>
+            <Button variant="contained" color="primary" startIcon={<PersonIcon />} onClick={() => setIsEditOpen(true)}>
+              Update Client
             </Button>
           </Box>
         </CardContent>
