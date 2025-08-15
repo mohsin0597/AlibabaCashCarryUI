@@ -446,17 +446,18 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
             "clientCode",
             "orderNo",
             "totalAmount",
-            "paymentDate",
+            "orderDate",
             "dueAmount",
             "direction",
             "paidAmount",
             "cashPaid",
             "cardPaid",
+            "paymentDate",
             "remarks",
-            "paymentMode"
+            "paymentMode",
           ].map((field) => {
             const label = fieldLabels[field] || field;
-            const isReadOnly = ["clientCode", "orderNo","totalAmount","direction","paidAmount","remarks","dueAmount"].includes(field);
+            const isReadOnly = ["clientCode", "orderNo","totalAmount","orderDate","direction","paidAmount","remarks","dueAmount"].includes(field);
             if (field === "paymentDate") {
               let dateValue = null;
               if (modalData[field]) {
@@ -500,8 +501,15 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
                     label={label}
                   >
                     <MenuItem value="Cash">Cash</MenuItem>
-                    <MenuItem value="Card">Card</MenuItem>
-                    <MenuItem value="Online">Online</MenuItem>
+                    <MenuItem value="TPV BBVA">TPV BBVA</MenuItem>
+                    <MenuItem value="TPV LA CAIXA">TPV LA CAIXA</MenuItem>
+                    <MenuItem value="TPV SANTANDER">TPV SANTANDER</MenuItem>
+                    <MenuItem value="LA CAIXA ENZOPOLIS">LA CAIXA ENZOPOLIS</MenuItem>
+                    <MenuItem value="BBVA ENZOPOLIS">BBVA ENZOPOLIS</MenuItem>
+                    <MenuItem value="BBVA BEBIDA MUNDIAL">BBVA BEBIDA MUNDIAL</MenuItem>
+                    <MenuItem value="SANTANDER ENZOPOLIS">SANTANDER ENZOPOLIS</MenuItem>
+                    <MenuItem value="BANK+CASH">BANK+CASH</MenuItem>
+                    <MenuItem value="Cheque">Cheque</MenuItem>
                   </Select>
                 </FormControl>
               );

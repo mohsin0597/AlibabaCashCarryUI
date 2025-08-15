@@ -317,7 +317,8 @@ export const fieldLabels = {
   remarks: "Remarks",
   cashPaid: "Cash Payment",
   cardPaid: "Card Payment",
-  remaining: "Remaining"
+  remaining: "Remaining",
+  paymentDate: "Payment Date",
 };
 
 // export default {clients, orders}

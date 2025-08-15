@@ -25,6 +25,7 @@ const OrderForm = ({ open, handleClose, client, readonly }) => {
     direction: '',
     deliveredBy: '',
     remarks: '',
+    status: '',
   };
   const [formData, setFormData] = useState(initialFormState);
 
@@ -36,6 +37,7 @@ const OrderForm = ({ open, handleClose, client, readonly }) => {
         // clientName: client.name || '',
         clientCode: client.clientCode || '',
         direction: client.location || '',
+        status: 'Waiting',
       }));
     }
   }, [client, open]);

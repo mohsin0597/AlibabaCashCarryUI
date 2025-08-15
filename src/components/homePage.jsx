@@ -81,7 +81,7 @@ console.log("options ",options)
     <Container maxWidth="sm" sx={{ position: 'relative' }}>
       <Box sx={{ position: 'absolute', top: 10, left: 0 }}>
         <img
-          src="/alibabaLogo.jpeg" // put your file in public/logo.jpeg
+          src="/ALIBABA.png" // put your file in public/logo.jpeg
           alt="Logo"
           style={{ width: 300, height: 'auto' }}
           onClick={() => navigate('/')} // optional click action
