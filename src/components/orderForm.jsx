@@ -36,7 +36,7 @@ const OrderForm = ({ open, handleClose, client, readonly }) => {
         ...prev,
         // clientName: client.name || '',
         clientCode: client.clientCode || '',
-        direction: client.location || '',
+        direction: client.city || '',
         status: 'Waiting',
       }));
     }

@@ -140,6 +140,10 @@ import { setSelectedClient } from '../redux/selectedClientSlice';
 import { setOrders, updateOrderField } from '../redux/orderSlice';
 import AddIcon from '@mui/icons-material/Add';
 import PersonIcon from '@mui/icons-material/Person';
+import CreditCardIcon from "@mui/icons-material/CreditCard";
+import PhoneIcon from "@mui/icons-material/Phone";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 
 
 
@@ -267,10 +271,10 @@ const ClientDetailsPage = () => {
               {client.name}
             </Typography> 
             <Box display="flex" justifyContent="space-evenly" sx={{ pt: "10px" }}>
-            <Typography sx={{ backgroundColor: "#f3eeee", borderRadius: "8px", width: "fit-content", padding: "4px" }}>{client.clientCode}</Typography>
-            <Typography sx={{ backgroundColor: "#f3eeee", borderRadius: "8px", width: "fit-content", padding: "4px" }}>{client.phone}</Typography>
-            <Typography sx={{ backgroundColor: "#f3eeee", borderRadius: "8px", width: "fit-content", padding: "4px" }}>{client.location}</Typography>
-            <Typography sx={{ backgroundColor: "#f3eeee", borderRadius: "8px", width: "fit-content", padding: "4px" }}>0 km</Typography>
+            <Typography sx={{ backgroundColor: "#f3eeee", borderRadius: "8px", width: "fit-content", padding: "4px", display:"flex", alignItems:"stretch" }}><CreditCardIcon fontSize="small" sx={{pr:"2px"}}/>{client.clientCode}</Typography>
+            <Typography sx={{ backgroundColor: "#f3eeee", borderRadius: "8px", width: "fit-content", padding: "4px", display:"flex", alignItems:"stretch" }}><PhoneIcon fontSize="small" sx={{pr:"2px"}}/>{client.phone}</Typography>
+            <Typography sx={{ backgroundColor: "#f3eeee", borderRadius: "8px", width: "fit-content", padding: "4px", display:"flex", alignItems:"stretch" }}><LocationOnIcon fontSize="small" sx={{pr:"2px"}}/>{client.city}</Typography>
+            <Typography sx={{ backgroundColor: "#f3eeee", borderRadius: "8px", width: "fit-content", padding: "4px", display:"flex", alignItems:"stretch" }}><DirectionsCarIcon fontSize="small" sx={{pr:"2px"}}/>0 km</Typography>
             </Box>
           </Box>
 

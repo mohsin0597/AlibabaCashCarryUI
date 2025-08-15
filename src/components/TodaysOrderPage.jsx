@@ -170,6 +170,7 @@ const TodaysOrdersPage = () => {
           <Table>
             <TableHead>
               <TableRow>
+                <TableCell>Sr No</TableCell>
                 {['clientName', 'clientCode', 'orderNo', 'direction'].map((col) => (
                   <TableCell key={col}>
                     <TableSortLabel
@@ -199,13 +200,14 @@ const TodaysOrdersPage = () => {
                   <TableCell colSpan={8}>No orders for today.</TableCell>
                 </TableRow>
               ) : (
-                orders.map((order) => (
+                orders.map((order, idx) => (
                   <TableRow key={order.id}>
+                    <TableCell>{idx + 1}</TableCell>
                     <TableCell>{order.clientName}</TableCell>
                     <TableCell>{order.clientCode}</TableCell>
                     <TableCell>{order.orderNo}</TableCell>                    
                     <TableCell>{order.direction}</TableCell>
-                    <TableCell>
+                    {/* <TableCell>
                       <Select
                         value={order.status || ''}
                         onChange={(e) => handleFieldChange(order.id, 'status', e.target.value)}
@@ -221,7 +223,17 @@ const TodaysOrdersPage = () => {
                         <MenuItem value="Waiting">Waiting</MenuItem>
                         <MenuItem value="Processing">Processing</MenuItem>
                       </Select>
-                    </TableCell>
+                    </TableCell> */}
+                    <TableCell sx={{
+                      backgroundColor:
+                        order.status === "Processing"
+                          ? "#c8e6c9"
+                          : order.status === "Waiting"
+                            ? "#fff9c4"
+                            : order.status === "Paid"
+                              ? "#ffcdd2"
+                              : "transparent",
+                    }}>{order.status}</TableCell>
                     <TableCell>{order.receivedAt}</TableCell>
                     <TableCell>
                       <TextField

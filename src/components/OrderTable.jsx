@@ -339,6 +339,7 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
       <Table>
         <TableHead>
           <TableRow sx={{ backgroundColor: '#000000' }}>
+            <TableCell sx={{ color: '#f5f5f5f5' }}>Sr No</TableCell>
             <TableCell sx={{ color: '#f5f5f5f5' }}>Order Date</TableCell>
             <TableCell sx={{ color: '#f5f5f5f5' }}>Factura No</TableCell>
             <TableCell sx={{ color: '#f5f5f5f5' }}>Total</TableCell>
@@ -353,11 +354,11 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
         </TableHead>
 
         <TableBody>
-          {orders?.map((order) => {
-          {/* {filteredOrders.map((order) => { */}
+          {orders?.map((order, idx) => {
             const isEditing = editRowId === order.id;
             return (
               <TableRow key={order.id} style={getRowStyle(order.status)}>
+                <TableCell>{idx + 1}</TableCell>
                 <TableCell>
                   {order.orderDate
                     ? new Date(order.orderDate).toLocaleDateString("en-GB").replace(/\//g, "-")
@@ -504,10 +505,9 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
                     <MenuItem value="TPV BBVA">TPV BBVA</MenuItem>
                     <MenuItem value="TPV LA CAIXA">TPV LA CAIXA</MenuItem>
                     <MenuItem value="TPV SANTANDER">TPV SANTANDER</MenuItem>
-                    <MenuItem value="LA CAIXA ENZOPOLIS">LA CAIXA ENZOPOLIS</MenuItem>
-                    <MenuItem value="BBVA ENZOPOLIS">BBVA ENZOPOLIS</MenuItem>
-                    <MenuItem value="BBVA BEBIDA MUNDIAL">BBVA BEBIDA MUNDIAL</MenuItem>
-                    <MenuItem value="SANTANDER ENZOPOLIS">SANTANDER ENZOPOLIS</MenuItem>
+                    <MenuItem value="LA CAIXA MONT LAHORE">LA CAIXA MONT LAHORE</MenuItem>
+                    <MenuItem value="BBVA MONT LAHORE">BBVA MONT LAHORE</MenuItem>
+                    <MenuItem value="SANTANDER MONT LAHORE">SANTANDER MONT LAHORE</MenuItem>
                     <MenuItem value="BANK+CASH">BANK+CASH</MenuItem>
                     <MenuItem value="Cheque">Cheque</MenuItem>
                   </Select>

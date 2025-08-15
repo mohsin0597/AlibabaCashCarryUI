@@ -23,7 +23,8 @@ const ordersSlice = createSlice({
       }
     },
     addOrder: (state, action) => {
-      state.list.push(action.payload);
+      // state.list.push(action.payload);
+      state.list = action.payload.items;
     }
   }
 });
