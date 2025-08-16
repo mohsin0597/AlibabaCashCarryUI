@@ -250,7 +250,13 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
   
   const handleModalSave = async () => {
   try {
-    const { clientCode, orderNo,receivedAt, ...payload } = modalData;
+    const { clientCode, orderNo, receivedAt, ...payload } = modalData;
+    // If cashPaid or cardPaid > 0, set status to 'Paid'
+    let cashPaidNum = Number(payload.cashPaid);
+    let cardPaidNum = Number(payload.cardPaid);
+    if ((!isNaN(cashPaidNum) && cashPaidNum > 0) || (!isNaN(cardPaidNum) && cardPaidNum > 0)) {
+      payload.status = 'Paid';
+    }
     const token = localStorage.getItem('authToken');
     const res = await fetch(
       `https://adminpanelnodeapi.onrender.com/api/v1/orders/${modalData.id}`, 

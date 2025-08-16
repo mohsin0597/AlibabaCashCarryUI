@@ -60,6 +60,8 @@ const TodaysOrdersPage = () => {
     };
 
     fetchOrders();
+    const intervalId = setInterval(fetchOrders, 60000); // 1 minute
+    return () => clearInterval(intervalId);
   }, [dispatch, today , date]);
 
   const handleSort = (key) => {
@@ -85,6 +87,10 @@ const TodaysOrdersPage = () => {
     if (!updatedOrder) return;
 
     const { clientCode, orderNo, orderDate, ...payload } = updatedOrder;
+    // If deliveredBy has a value, set status to 'Processing'
+    if (payload.deliveredBy && payload.deliveredBy.trim() !== '') {
+      payload.status = 'Processing';
+    }
 
     try {
       const token = localStorage.getItem("authToken");
@@ -205,7 +211,7 @@ const TodaysOrdersPage = () => {
                     <TableCell>{idx + 1}</TableCell>
                     <TableCell>{order.clientName}</TableCell>
                     <TableCell>{order.clientCode}</TableCell>
-                    <TableCell>{order.orderNo}</TableCell>                    
+                    <TableCell>A/{order.orderNo}</TableCell>                    
                     <TableCell>{order.direction}</TableCell>
                     {/* <TableCell>
                       <Select
@@ -253,7 +259,7 @@ const TodaysOrdersPage = () => {
                       <TextField
                         value={order.deliveredBy || ''}
                         onChange={(e) => handleFieldChange(order.id, 'deliveredBy', e.target.value)}
-                        fullWidth
+                        fullWidth={false}
                         size="small"
                       />
                     </TableCell>
