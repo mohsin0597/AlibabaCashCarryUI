@@ -167,6 +167,7 @@ import { setOrders, updateOrderField } from '../redux/orderSlice';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { setSelectedClient, setSelectedClientRemaining } from '../redux/selectedClientSlice';
 // import { updateOrderField } from '../store/ordersSlice';
 
 const OrderTable = ({ sortConfig, onSort = () => {} }) => {
@@ -276,6 +277,7 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
 
     const updatedOrder = await res.json();
     dispatch(setOrders(updatedOrder.items || []));
+    dispatch(setSelectedClientRemaining(updatedOrder.totalPendingBalance));
 
     // ✅ Update Redux store
     Object.keys(updatedOrder).forEach(key => {
@@ -348,6 +350,7 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
             <TableCell sx={{ color: '#f5f5f5f5' }}>Sr No</TableCell>
             <TableCell sx={{ color: '#f5f5f5f5' }}>Order Date</TableCell>
             <TableCell sx={{ color: '#f5f5f5f5' }}>Factura No</TableCell>
+            <TableCell sx={{ color: '#f5f5f5f5' }}>Direction</TableCell>
             <TableCell sx={{ color: '#f5f5f5f5' }}>Total</TableCell>
             <TableCell sx={{ color: '#f5f5f5f5' }}>Paid</TableCell>
             <TableCell sx={{ color: '#f5f5f5f5' }}>Due</TableCell>
@@ -370,9 +373,9 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
                     ? new Date(order.orderDate).toLocaleDateString("en-GB").replace(/\//g, "-")
                     : ""}
                 </TableCell>
-                <TableCell>{order.orderNo}</TableCell>
-                {/* <TableCell>{order.clientName}</TableCell>
-                <TableCell>{order.direction}</TableCell> */}
+                <TableCell>A/{order.orderNo}</TableCell>
+                {/* <TableCell>{order.clientName}</TableCell> */}
+                <TableCell>{order.direction}</TableCell>
                 <TableCell>
                   {isEditing ? (
                     <TextField

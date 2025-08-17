@@ -21,6 +21,9 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setOrders, updateOrderField } from '../redux/orderSlice';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import AirportShuttleIcon from '@mui/icons-material/AirportShuttle';
 
 const TodaysOrdersPage = () => {
   const navigate = useNavigate();
@@ -176,9 +179,9 @@ const TodaysOrdersPage = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Sr No</TableCell>
+                <TableCell sx={{ border: "2px solid black" }}>Sr No</TableCell>
                 {['clientName', 'clientCode', 'orderNo', 'direction'].map((col) => (
-                  <TableCell key={col}>
+                  <TableCell key={col} sx={{ border: "2px solid black" }}>
                     <TableSortLabel
                       active={sortConfig.key === col}
                       direction={sortConfig.key === col ? sortConfig.direction : 'asc'}
@@ -188,11 +191,11 @@ const TodaysOrdersPage = () => {
                     </TableSortLabel>
                   </TableCell>
                 ))}
-                <TableCell>Update</TableCell>
-                <TableCell>Received At</TableCell>
-                <TableCell>Exit At</TableCell>
-                <TableCell>Driver</TableCell>                
-                <TableCell>Action</TableCell>
+                <TableCell sx={{ border: "2px solid black" }}>Update</TableCell>
+                <TableCell sx={{ border: "2px solid black" }}>Received At</TableCell>
+                <TableCell sx={{ border: "2px solid black" }}>Exit At</TableCell>
+                <TableCell sx={{ border: "2px solid black" }}>Driver</TableCell>                
+                <TableCell sx={{ border: "2px solid black" }}>Action</TableCell>
               </TableRow>
             </TableHead>
 
@@ -239,7 +242,20 @@ const TodaysOrdersPage = () => {
                             : order.status === "Paid"
                               ? "#ffcdd2"
                               : "transparent",
-                    }}>{order.status}</TableCell>
+                    }}>
+                      <Box display="flex" alignItems="center" justifyContent="space-around">
+                        <span>{order.status}</span>
+                        {order.status === "Waiting" && (
+                          <HourglassEmptyIcon sx={{ color: "#f4a300", height: 20, width: 20 }} />
+                        )}
+                        {order.status === "Paid" && (
+                          <MonetizationOnIcon sx={{ color: "#e21a00ff" }} /> // Money bag replacement
+                        )}
+                        {order.status === "Processing" && (
+                          <AirportShuttleIcon sx={{ color: "#008d23ff" }} /> // Money bag replacement
+                        )}
+                      </Box>
+                    </TableCell>
                     <TableCell>{order.receivedAt}</TableCell>
                     <TableCell>
                       <TextField

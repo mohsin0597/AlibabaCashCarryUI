@@ -18,6 +18,8 @@ import { addOrder } from '../redux/orderSlice';
 
 const OrderForm = ({ open, handleClose, client, readonly }) => {
   const dispatch = useDispatch();
+  const now = new Date();
+
   const initialFormState = {
     clientCode: '',
     orderNo: '',
@@ -26,6 +28,7 @@ const OrderForm = ({ open, handleClose, client, readonly }) => {
     deliveredBy: '',
     remarks: '',
     status: '',
+    receivedAt: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }),
   };
   const [formData, setFormData] = useState(initialFormState);
 
