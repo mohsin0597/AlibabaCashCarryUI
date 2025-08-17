@@ -78,15 +78,16 @@ console.log("options ",options)
   };
 
   return (
-    <Container maxWidth="sm" sx={{ position: 'relative' }}>
-      <Box sx={{ position: 'absolute', top: 10, left: 0 }}>
+    <>
+    <Box sx={{ position: 'absolute', top:10, left: 20 }}>
         <img
-          src="/ALIBABA.png" // put your file in public/logo.jpeg
+          src="/ALIBABANew.png" // put your file in public/logo.jpeg
           alt="Logo"
-          style={{ width: 300, height: 'auto' }}
+          style={{ width: 400, height: 'auto' }}
           onClick={() => navigate('/')} // optional click action
         />
       </Box>
+    <Container maxWidth="sm">
       <Box
         sx={{
           minHeight: '100vh',
@@ -97,7 +98,7 @@ console.log("options ",options)
           gap: 3,
         }}
       >
-        <Typography variant="h5" align="center" gutterBottom>
+        <Typography variant="h5" align="center" gutterBottom sx={{ fontWeight: 'bold', fontStyle:'oblique', fontSize: '2rem' }}>
           Ali Baba Order Management System
         </Typography>
         <Autocomplete
@@ -189,6 +190,7 @@ console.log("options ",options)
         />
       </Box>
     </Container>
+    </>
   );
 };
 
