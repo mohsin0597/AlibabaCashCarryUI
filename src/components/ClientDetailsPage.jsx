@@ -264,7 +264,7 @@ const ClientDetailsPage = () => {
         Back to Home
       </Button>
 
-      <Card sx={{ mt: 2, mb: 3 }}>
+      <Card sx={{ mt: 2, mb: 3, backgroundColor: "hsla(215, 15%, 97%, 0.5)", borderRadius: "5px" }}>
         <CardContent>
           <Box>
             <Typography align="center" variant="h5" sx={{ my: "5px" }}>
@@ -276,6 +276,7 @@ const ClientDetailsPage = () => {
             <Typography sx={{ backgroundColor: "#f3eeee", borderRadius: "8px", width: "fit-content", padding: "4px", display:"flex", alignItems:"stretch" }}><LocationOnIcon fontSize="small" sx={{pr:"2px"}}/>{client.city}</Typography>
             <Typography sx={{ backgroundColor: "#f3eeee", borderRadius: "8px", width: "fit-content", padding: "4px", display:"flex", alignItems:"stretch" }}><DirectionsCarIcon fontSize="small" sx={{pr:"2px"}}/>0 km</Typography>
             </Box>
+            {/* , backgroundColor: "#1976d2e0", color: "white" */}
           </Box>
 
           <Box sx={{ pt:"10px"}}>

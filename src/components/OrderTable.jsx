@@ -315,6 +315,7 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
 
     const updatedOrder = await res.json();
     dispatch(setOrders(updatedOrder.items || []));
+    dispatch(setSelectedClientRemaining(updatedOrder.totalPendingBalance));
 
     Object.keys(updatedOrder).forEach(key => {
       dispatch(updateOrderField({ id: updatedOrder.id, field: key, value: updatedOrder[key] }));
@@ -564,7 +565,12 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
                 <TableCell>{trailData.cardPaid || '-'}</TableCell>
                 <TableCell>{trailData.paymentMode || '-'}</TableCell>
                 <TableCell>{trailData.remaining || '-'}</TableCell>
-                <TableCell>{trailData.paymentDate || '-'}</TableCell>
+                {/* <TableCell>{trailData.paymentDate || '-'}</TableCell> */}
+                <TableCell>
+                  {trailData.paymentDate
+                    ? new Date(trailData.paymentDate).toLocaleDateString("en-GB").replace(/\//g, "-")
+                    : ""}
+                </TableCell>
               </TableRow>
             </TableBody>
           </Table>

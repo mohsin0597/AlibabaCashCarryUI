@@ -15,6 +15,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { format } from "date-fns";
 import { useDispatch } from 'react-redux';
 import { addOrder } from '../redux/orderSlice';
+import { setSelectedClientRemaining } from '../redux/selectedClientSlice';
 
 const OrderForm = ({ open, handleClose, client, readonly }) => {
   const dispatch = useDispatch();
@@ -70,6 +71,7 @@ const OrderForm = ({ open, handleClose, client, readonly }) => {
     const data = await res.json();
     console.log('Order saved:', data);
     dispatch(addOrder(data));
+    dispatch(setSelectedClientRemaining(data.totalPendingBalance));
     setFormData(initialFormState); // Reset form after successful submit
     handleClose();
   } catch (error) {

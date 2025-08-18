@@ -40,7 +40,7 @@ const TodaysOrdersPage = () => {
     const fetchOrders = async () => {
       try {
         setLoading(true);
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('authToken');
         const res = await fetch(
           `https://adminpanelnodeapi.onrender.com/api/v1/orders/by-date?date=${date}`,
           {
@@ -67,19 +67,45 @@ const TodaysOrdersPage = () => {
     return () => clearInterval(intervalId);
   }, [dispatch, today , date]);
 
+  // const handleSort = (key) => {
+  //   let direction = 'asc';
+  //   if (sortConfig.key === key && sortConfig.direction === 'asc') {
+  //     direction = 'desc';
+  //   }
+  //   const sorted = [...orders].sort((a, b) => {
+  //     if (a[key] < b[key]) return direction === 'asc' ? -1 : 1;
+  //     if (a[key] > b[key]) return direction === 'asc' ? 1 : -1;
+  //     return 0;
+  //   });
+  //   setSortConfig({ key, direction });
+  //   dispatch(setOrders(sorted));
+  // };
   const handleSort = (key) => {
-    let direction = 'asc';
-    if (sortConfig.key === key && sortConfig.direction === 'asc') {
-      direction = 'desc';
+  let direction = 'asc';
+  if (sortConfig.key === key && sortConfig.direction === 'asc') {
+    direction = 'desc';
+  }
+
+  const sorted = [...orders].sort((a, b) => {
+    if (key === 'receivedAt') {
+      // convert HH:mm to minutes for numeric comparison
+      const [aH, aM] = a[key].split(':').map(Number);
+      const [bH, bM] = b[key].split(':').map(Number);
+      const aMinutes = aH * 60 + aM;
+      const bMinutes = bH * 60 + bM;
+
+      return direction === 'asc' ? aMinutes - bMinutes : bMinutes - aMinutes;
     }
-    const sorted = [...orders].sort((a, b) => {
-      if (a[key] < b[key]) return direction === 'asc' ? -1 : 1;
-      if (a[key] > b[key]) return direction === 'asc' ? 1 : -1;
-      return 0;
-    });
-    setSortConfig({ key, direction });
-    dispatch(setOrders(sorted));
-  };
+
+    // default for other fields
+    if (a[key] < b[key]) return direction === 'asc' ? -1 : 1;
+    if (a[key] > b[key]) return direction === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  setSortConfig({ key, direction });
+  dispatch(setOrders(sorted));
+};
 
   const handleFieldChange = (id, field, value) => {
     dispatch(updateOrderField({ id, field, value }));
@@ -192,7 +218,16 @@ const TodaysOrdersPage = () => {
                   </TableCell>
                 ))}
                 <TableCell sx={{ border: "2px solid black" }}>Update</TableCell>
-                <TableCell sx={{ border: "2px solid black" }}>Received At</TableCell>
+                <TableCell sx={{ border: "2px solid black" }}>
+                  <TableSortLabel
+                    active={sortConfig.key === "receivedAt"}
+                    direction={sortConfig.key === "receivedAt" ? sortConfig.direction : "asc"}
+                    onClick={() => handleSort("receivedAt")}
+                  >
+                    Received At
+                    {/* {col.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())} */}
+                  </TableSortLabel>
+                </TableCell>
                 <TableCell sx={{ border: "2px solid black" }}>Exit At</TableCell>
                 <TableCell sx={{ border: "2px solid black" }}>Driver</TableCell>                
                 <TableCell sx={{ border: "2px solid black" }}>Action</TableCell>
@@ -216,23 +251,6 @@ const TodaysOrdersPage = () => {
                     <TableCell>{order.clientCode}</TableCell>
                     <TableCell>A/{order.orderNo}</TableCell>                    
                     <TableCell>{order.direction}</TableCell>
-                    {/* <TableCell>
-                      <Select
-                        value={order.status || ''}
-                        onChange={(e) => handleFieldChange(order.id, 'status', e.target.value)}
-                        size="small"
-                        fullWidth
-                        displayEmpty
-                        sx={{ minWidth: 120 }}
-                      >
-                        <MenuItem value="" disabled>
-                          <span style={{ color: '#aaa' }}>Select Status</span>
-                        </MenuItem>
-                        <MenuItem value="Paid">Paid</MenuItem>
-                        <MenuItem value="Waiting">Waiting</MenuItem>
-                        <MenuItem value="Processing">Processing</MenuItem>
-                      </Select>
-                    </TableCell> */}
                     <TableCell sx={{
                       backgroundColor:
                         order.status === "Processing"
