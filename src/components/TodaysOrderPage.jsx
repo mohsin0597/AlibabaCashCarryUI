@@ -13,7 +13,8 @@ import {
   Box,
   Select,
   MenuItem,
-  TextField
+  TextField,
+  Divider
 } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -204,7 +205,7 @@ const TodaysOrdersPage = () => {
         <Paper>
           <Table>
             <TableHead>
-              <TableRow>
+              <TableRow sx={{ backgroundColor: "#dcdcdc"}}>
                 <TableCell sx={{ border: "2px solid black" }}>Sr No</TableCell>
                 {['clientName', 'clientCode', 'orderNo', 'direction'].map((col) => (
                   <TableCell key={col} sx={{ border: "2px solid black" }}>
@@ -245,62 +246,66 @@ const TodaysOrdersPage = () => {
                 </TableRow>
               ) : (
                 orders.map((order, idx) => (
-                  <TableRow key={order.id}>
-                    <TableCell>{idx + 1}</TableCell>
-                    <TableCell>{order.clientName}</TableCell>
-                    <TableCell>{order.clientCode}</TableCell>
-                    <TableCell>A/{order.orderNo}</TableCell>                    
-                    <TableCell>{order.direction}</TableCell>
-                    <TableCell sx={{
-                      backgroundColor:
-                        order.status === "Processing"
-                          ? "#c8e6c9"
-                          : order.status === "Waiting"
-                            ? "#fff9c4"
-                            : order.status === "Paid"
-                              ? "#ffcdd2"
-                              : "transparent",
-                    }}>
-                      <Box display="flex" alignItems="center" justifyContent="space-around">
-                        <span>{order.status}</span>
-                        {order.status === "Waiting" && (
-                          <HourglassEmptyIcon sx={{ color: "#f4a300", height: 20, width: 20 }} />
-                        )}
-                        {order.status === "Paid" && (
-                          <MonetizationOnIcon sx={{ color: "#e21a00ff" }} /> // Money bag replacement
-                        )}
-                        {order.status === "Processing" && (
-                          <AirportShuttleIcon sx={{ color: "#008d23ff" }} /> // Money bag replacement
-                        )}
-                      </Box>
-                    </TableCell>
-                    <TableCell>{order.receivedAt}</TableCell>
-                    <TableCell>
-                      <TextField
-                        type="time"
-                        value={order.exitAt ? order.exitAt.slice(0,5) : ''}
-                        onChange={(e) => {
-                          // Only keep HH:MM
-                          const val = e.target.value;
-                          handleFieldChange(order.id, 'exitAt', val);
-                        }}
-                        fullWidth={false}
-                        size="small"
-                        inputProps={{ step: 60 }} // minute steps
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <TextField
-                        value={order.deliveredBy || ''}
-                        onChange={(e) => handleFieldChange(order.id, 'deliveredBy', e.target.value)}
-                        fullWidth={false}
-                        size="small"
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Button onClick={() => handleSave(order.id)}>Save</Button>
-                    </TableCell>
-                  </TableRow>
+                    <TableRow key={order.id}
+                      // sx={{ backgroundColor: '#f5f5f5' }}
+                      sx={{
+                        backgroundColor:
+                          order.status === "Processing"
+                            ? "#c8e6c9"
+                            : order.status === "Waiting"
+                              ? "#fff9c4"
+                              : order.status === "Paid"
+                                ? "#ffcdd2"
+                                : "transparent",
+                                "& td": { borderBottom: "2px solid #ccc" },
+                      }}
+                    >
+                      <TableCell sx={{ fontSize: '15px' }}>{idx + 1}</TableCell>
+                      <TableCell sx={{ fontSize: '15px' }}>{order.clientName}</TableCell>
+                      <TableCell sx={{ fontSize: '15px' }}>{order.clientCode}</TableCell>
+                      <TableCell sx={{ fontSize: '15px' }}>A/{order.orderNo}</TableCell>
+                      <TableCell sx={{ fontSize: '15px' }}>{order.direction}</TableCell>
+                      <TableCell sx={{ fontSize: '15px' }}>
+                        <Box display="flex" alignItems="center" justifyContent="space-around">
+                          <span>{order.status}</span>
+                          {order.status === "Waiting" && (
+                            <HourglassEmptyIcon sx={{ color: "#f4a300", height: 20, width: 20 }} />
+                          )}
+                          {order.status === "Paid" && (
+                            <MonetizationOnIcon sx={{ color: "#e21a00ff" }} /> // Money bag replacement
+                          )}
+                          {order.status === "Processing" && (
+                            <AirportShuttleIcon sx={{ color: "#008d23ff" }} /> // Money bag replacement
+                          )}
+                        </Box>
+                      </TableCell>
+                      <TableCell sx={{ fontSize: '15px' }}>{order.receivedAt}</TableCell>
+                      <TableCell sx={{ fontSize: '15px' }}>
+                        <TextField
+                          type="time"
+                          value={order.exitAt ? order.exitAt.slice(0, 5) : ''}
+                          onChange={(e) => {
+                            // Only keep HH:MM
+                            const val = e.target.value;
+                            handleFieldChange(order.id, 'exitAt', val);
+                          }}
+                          fullWidth={false}
+                          size="small"
+                          inputProps={{ step: 60 }} // minute steps
+                        />
+                      </TableCell>
+                      <TableCell sx={{ fontSize: '15px' }}>
+                        <TextField
+                          value={order.deliveredBy || ''}
+                          onChange={(e) => handleFieldChange(order.id, 'deliveredBy', e.target.value)}
+                          fullWidth={false}
+                          size="small"
+                        />
+                      </TableCell>
+                      <TableCell sx={{ fontSize: '15px' }}>
+                        <Button onClick={() => handleSave(order.id)}>Save</Button>
+                      </TableCell>
+                    </TableRow>
                 ))
               )}
             </TableBody>
