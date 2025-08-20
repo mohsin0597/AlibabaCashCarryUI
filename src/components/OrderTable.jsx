@@ -389,7 +389,7 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
                     order.totalAmount
                   )}
                 </TableCell>
-                <TableCell>
+                <TableCell sx={{backgroundColor: '#c8e6c9'}}>
                   {isEditing ? (
                     <TextField
                       value={order.paidAmount}
@@ -401,7 +401,7 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
                     order.paidAmount
                   )}
                 </TableCell>
-                <TableCell>
+                <TableCell sx={{backgroundColor: '#ff4053ee'}}>
                   {isEditing ? (
                     <TextField
                       value={order.dueAmount}
