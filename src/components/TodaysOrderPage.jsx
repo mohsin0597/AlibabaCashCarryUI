@@ -46,7 +46,7 @@ const TodaysOrdersPage = () => {
           `https://adminpanelnodeapi.onrender.com/api/v1/orders/by-date?date=${date}`,
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${token}`, 
               'Content-Type': 'application/json' 
             }
           }
