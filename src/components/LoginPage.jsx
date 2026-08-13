@@ -28,7 +28,7 @@ const LoginPage = () => {
     try {
       setLoading(true);
       const res = await fetch(
-        'https://adminpanelnodeapi.onrender.com/api/v1/auth/login',
+        'https://alibabacashcarryapi.onrender.com/api/v1/auth/login',
         {
           method: 'POST',
           headers: {

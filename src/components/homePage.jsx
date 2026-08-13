@@ -40,7 +40,7 @@ const HomePage = () => {
 
   setLoading(true);
   fetch(
-    `https://adminpanelnodeapi.onrender.com/api/v1/clients/search?term=${searchValue}`,
+    `https://alibabacashcarryapi.onrender.com/api/v1/clients/search?term=${searchValue}`,
     {
       method: 'GET',
       headers: {

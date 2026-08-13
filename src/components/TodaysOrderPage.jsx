@@ -43,7 +43,7 @@ const TodaysOrdersPage = () => {
         setLoading(true);
         const token = localStorage.getItem('authToken');
         const res = await fetch(
-          `https://adminpanelnodeapi.onrender.com/api/v1/orders/by-date?date=${date}`,
+          `https://alibabacashcarryapi.onrender.com/api/v1/orders/by-date?date=${date}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, 
@@ -125,7 +125,7 @@ const TodaysOrdersPage = () => {
     try {
       const token = localStorage.getItem("authToken");
       const res = await fetch(
-        `https://adminpanelnodeapi.onrender.com/api/v1/orders/${id}`,
+        `https://alibabacashcarryapi.onrender.com/api/v1/orders/${id}`,
         {
           method: "PUT",
           headers: {

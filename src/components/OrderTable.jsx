@@ -194,7 +194,7 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
       dispatch({ type: 'orders/setLoading', payload: true });
   
       fetch(
-        `https://adminpanelnodeapi.onrender.com/api/v1/orders/by-client/${client.clientCode}`,
+        `https://alibabacashcarryapi.onrender.com/api/v1/orders/by-client/${client.clientCode}`,
         {
           method: 'GET',
           headers: {
@@ -260,7 +260,7 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
     }
     const token = localStorage.getItem('authToken');
     const res = await fetch(
-      `https://adminpanelnodeapi.onrender.com/api/v1/orders/${modalData.id}`, 
+      `https://alibabacashcarryapi.onrender.com/api/v1/orders/${modalData.id}`, 
       {
         method: 'PUT',
         headers: {
@@ -298,7 +298,7 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
     const { clientCode, receivedAt, ...payload } = modificationModalData;
     const token = localStorage.getItem('authToken');
     const res = await fetch(
-      `https://adminpanelnodeapi.onrender.com/api/v1/orders/${modificationModalData.id}`, 
+      `https://alibabacashcarryapi.onrender.com/api/v1/orders/${modificationModalData.id}`, 
       {
         method: 'PUT',
         headers: {
