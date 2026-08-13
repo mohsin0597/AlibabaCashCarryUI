@@ -33,7 +33,7 @@ const ClientForm = ({ open, handleClose }) => {
     const token = localStorage.getItem('authToken');
 
     const res = await fetch(
-      'https://adminpanelnodeapi.onrender.com/api/v1/clients', 
+      'https://alibabacashcarryapi.onrender.com/api/v1/clients', 
       {
         method: 'POST',
         headers: {

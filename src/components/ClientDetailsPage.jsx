@@ -203,7 +203,7 @@ const ClientDetailsPage = () => {
     const token = localStorage.getItem('authToken');
 
     const res = await fetch(
-      `https://adminpanelnodeapi.onrender.com/api/v1/clients/${updatedClient._id}`, 
+      `https://alibabacashcarryapi.onrender.com/api/v1/clients/${updatedClient._id}`, 
       {
         method: 'PUT', // or PATCH, depending on backend
         headers: {
