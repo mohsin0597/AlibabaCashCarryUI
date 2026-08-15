@@ -22,7 +22,7 @@ const ProtectedRoute = ({ children }) => {
 function App() {
   return (
     <Router>
-      <Alert
+      {/* <Alert
         severity="warning"
         sx={{
           mb: 2,
@@ -35,7 +35,7 @@ function App() {
         }}
       >
         AliBabaCashCarry.com is expiring on 13/08/2026
-      </Alert>
+      </Alert> */}
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route
@@ -51,7 +51,7 @@ function App() {
           element={
             <ProtectedRoute>
               <AllOrdersPage />
-            </ProtectedRoute>
+            </ProtectedRoute> 
           }
         />
         <Route
