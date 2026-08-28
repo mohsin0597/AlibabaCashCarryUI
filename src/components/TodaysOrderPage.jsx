@@ -25,6 +25,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import AirportShuttleIcon from '@mui/icons-material/AirportShuttle';
+import { apiFetch } from '../api';
 
 const TodaysOrdersPage = () => {
   const navigate = useNavigate();
@@ -42,8 +43,8 @@ const TodaysOrdersPage = () => {
       try {
         setLoading(true);
         const token = localStorage.getItem('authToken');
-        const res = await fetch(
-          `https://alibabacashcarryapi.onrender.com/api/v1/orders/by-date?date=${date}`,
+        const res = await apiFetch(
+          `${process.env.REACT_APP_API_BASE_URL}/api/v1/orders/by-date?date=${date}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, 
@@ -124,8 +125,8 @@ const TodaysOrdersPage = () => {
 
     try {
       const token = localStorage.getItem("authToken");
-      const res = await fetch(
-        `https://alibabacashcarryapi.onrender.com/api/v1/orders/${id}`,
+      const res = await apiFetch(
+        `${process.env.REACT_APP_API_BASE_URL}/api/v1/orders/${id}`,
         {
           method: "PUT",
           headers: {
