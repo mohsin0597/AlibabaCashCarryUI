@@ -8,6 +8,7 @@ import {
   TextField,
   Stack
 } from '@mui/material';
+import { apiFetch } from '../api';
 
 const ClientForm = ({ open, handleClose }) => {
   const [formData, setFormData] = React.useState({
@@ -32,8 +33,8 @@ const ClientForm = ({ open, handleClose }) => {
   try {
     const token = localStorage.getItem('authToken');
 
-    const res = await fetch(
-      'https://alibabacashcarryapi.onrender.com/api/v1/clients', 
+    const res = await apiFetch(
+      `${process.env.REACT_APP_API_BASE_URL}/api/v1/clients`, 
       {
         method: 'POST',
         headers: {

@@ -168,6 +168,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { setSelectedClient, setSelectedClientRemaining } from '../redux/selectedClientSlice';
+import { apiFetch } from '../api';
 // import { updateOrderField } from '../store/ordersSlice';
 
 const OrderTable = ({ sortConfig, onSort = () => {} }) => {
@@ -193,8 +194,8 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
   
       dispatch({ type: 'orders/setLoading', payload: true });
   
-      fetch(
-        `https://alibabacashcarryapi.onrender.com/api/v1/orders/by-client/${client.clientCode}`,
+      apiFetch(
+        `${process.env.REACT_APP_API_BASE_URL}/api/v1/orders/by-client/${client.clientCode}`,
         {
           method: 'GET',
           headers: {
@@ -259,8 +260,8 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
       payload.status = 'Paid';
     }
     const token = localStorage.getItem('authToken');
-    const res = await fetch(
-      `https://alibabacashcarryapi.onrender.com/api/v1/orders/${modalData.id}`, 
+    const res = await apiFetch(
+      `${process.env.REACT_APP_API_BASE_URL}/api/v1/orders/${modalData.id}`, 
       {
         method: 'PUT',
         headers: {
@@ -297,8 +298,8 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
   try {
     const { clientCode, receivedAt, ...payload } = modificationModalData;
     const token = localStorage.getItem('authToken');
-    const res = await fetch(
-      `https://alibabacashcarryapi.onrender.com/api/v1/orders/${modificationModalData.id}`, 
+    const res = await apiFetch(
+      `${process.env.REACT_APP_API_BASE_URL}/api/v1/orders/${modificationModalData.id}`, 
       {
         method: 'PUT',
         headers: {

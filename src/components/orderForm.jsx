@@ -16,6 +16,7 @@ import { format } from "date-fns";
 import { useDispatch } from 'react-redux';
 import { addOrder } from '../redux/orderSlice';
 import { setSelectedClientRemaining } from '../redux/selectedClientSlice';
+import { apiFetch } from '../api';
 
 const OrderForm = ({ open, handleClose, client, readonly }) => {
   const dispatch = useDispatch();
@@ -54,8 +55,8 @@ const OrderForm = ({ open, handleClose, client, readonly }) => {
   const handleSubmit = async () => {
   try {
     const token = localStorage.getItem('authToken');
-    const res = await fetch(
-      'https://alibabacashcarryapi.onrender.com/api/v1/orders', 
+    const res = await apiFetch(
+      `${process.env.REACT_APP_API_BASE_URL}/api/v1/orders`, 
       {
         method: 'POST',
         headers: {

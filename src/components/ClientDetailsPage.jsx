@@ -143,6 +143,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import PhoneIcon from "@mui/icons-material/Phone";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { apiFetch } from '../api';
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 
 
@@ -202,8 +203,8 @@ const ClientDetailsPage = () => {
   try {
     const token = localStorage.getItem('authToken');
 
-    const res = await fetch(
-      `https://alibabacashcarryapi.onrender.com/api/v1/clients/${updatedClient._id}`, 
+    const res = await apiFetch(
+      `${process.env.REACT_APP_API_BASE_URL}/api/v1/clients/${updatedClient._id}`, 
       {
         method: 'PUT', // or PATCH, depending on backend
         headers: {

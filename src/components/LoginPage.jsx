@@ -11,6 +11,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { login } from '../redux/authSlice';
 import { useNavigate } from 'react-router-dom';
+import { apiFetch } from '../api';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
@@ -27,8 +28,8 @@ const LoginPage = () => {
 
     try {
       setLoading(true);
-      const res = await fetch(
-        'https://alibabacashcarryapi.onrender.com/api/v1/auth/login',
+      const res = await apiFetch(
+        `${process.env.REACT_APP_API_BASE_URL}/api/v1/auth/login`,
         {
           method: 'POST',
           headers: {

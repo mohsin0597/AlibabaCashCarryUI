@@ -16,6 +16,7 @@ import OrderForm from './orderForm';
 import ClientList from './clients';
 import { setSelectedClient } from '../redux/selectedClientSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { apiFetch } from '../api';
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -39,8 +40,8 @@ const HomePage = () => {
   const token = localStorage.getItem('authToken'); // ✅ get token from localStorage
 
   setLoading(true);
-  fetch(
-    `https://alibabacashcarryapi.onrender.com/api/v1/clients/search?term=${searchValue}`,
+  apiFetch(
+    `${process.env.REACT_APP_API_BASE_URL}/api/v1/clients/search?term=${searchValue}`,
     {
       method: 'GET',
       headers: {
