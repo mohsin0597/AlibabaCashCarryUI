@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { Alert } from '@mui/material';
+import { Alert, Backdrop, CircularProgress } from '@mui/material';
 import AllOrdersPage from './components/AllOrdersPage';
 import HomePage from './components/homePage';
 import TodaysOrdersPage from './components/TodaysOrderPage';
@@ -36,6 +36,12 @@ function App() {
       >
         AliBabaCashCarry.com is expiring on 13/08/2026
       </Alert> */}
+      <Backdrop
+        sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+        open={true}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route
