@@ -36,12 +36,12 @@ function App() {
       >
         AliBabaCashCarry.com is expiring on 13/08/2026
       </Alert> */}
-      <Backdrop
+      {/* <Backdrop
         sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
         open={true}
       >
         <CircularProgress color="inherit" />
-      </Backdrop>
+      </Backdrop> */}
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route
