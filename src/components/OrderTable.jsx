@@ -365,7 +365,13 @@ const OrderTable = ({ sortConfig, onSort = () => {} }) => {
         </TableHead>
 
         <TableBody>
-          {orders?.map((order, idx) => {
+          {orders?.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={12} align="center">
+                No orders for this client
+              </TableCell>
+            </TableRow>
+          ) : orders?.map((order, idx) => {
             const isEditing = editRowId === order.id;
             return (
               <TableRow key={order.id} style={getRowStyle(order.status)}>
